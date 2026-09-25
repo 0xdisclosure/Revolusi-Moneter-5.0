@@ -103,8 +103,8 @@ fn execute_barter(
         return Err(StdError::generic_err("Invalid barter rate"));
     }
 
-    let to_amount =
-        Uint128::new(from_amount) * rate_resp.rate / Uint128::new(1_000_000_000_000_000_000u128);
+    let to_amount = Uint128::new(from_amount).checked_mul(rate_resp.rate)?
+        / Uint128::new(1_000_000_000_000_000_000u128);
 
     let meat = MEAT.load(deps.storage)?;
     let bal: meat::msg::BalanceSubtypeWithLineageResponse = deps.querier.query_wasm_smart(
